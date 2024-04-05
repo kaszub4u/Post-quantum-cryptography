@@ -335,7 +335,7 @@ function NTRU(p, q)
 	
 	this.hashn = async function(data, mod = p)
 	{
-		const uint8 = new TextEncoder().encode(await serialize(data));
+		const uint8 = new TextEncoder().encode(await this.serialize(data));
 		
 		let n = (mod - 1n)
 		for(let i = 0; i < uint8.length; i++)
@@ -409,7 +409,7 @@ function NTRU(p, q)
 	
 	this.NTRUEncode = async function(data, seed)
 	{
-		const uint8 = new TextEncoder().encode(await serialize(data));
+		const uint8 = new TextEncoder().encode(await this.serialize(data));
 		for(let i = 0n; i < BigInt(uint8.length); i++)
 			uint8[i] ^= Number((await this.hashn((seed + i).toString(16), p)) & 255n);
 		return uint8array2base64(uint8);
@@ -420,7 +420,7 @@ function NTRU(p, q)
 		const uint8 = base642uint8array(base64);
 		for(let i = 0n; i < BigInt(uint8.length); i++)
 			uint8[i] ^= Number((await this.hashn((seed + i).toString(16), p)) & 255n);
-		return await deserialize(new TextDecoder().decode(uint8));
+		return await this.deserialize(new TextDecoder().decode(uint8));
 	}
 	
 	this.encryptNTRU = async function(data, h, seed = 0n)
@@ -448,14 +448,14 @@ function NTRU(p, q)
 	
 	this.encrypt = async function(data, password, seed = 0n)
 	{
-		const passwordn = str2n(await serialize(password));
+		const passwordn = str2n(await this.serialize(password));
 		const [f, h] = await this.genKeys(passwordn);
 		return await this.encryptNTRU(data, h, seed)
 	}
 
 	this.decrypt = async function(encrypted, password)
 	{
-		const passwordn = str2n(await serialize(password));	
+		const passwordn = str2n(await this.serialize(password));	
 		const [f, h] = await this.genKeys(passwordn);
 		return await this.decryptNTRU(encrypted, f);
 	}
