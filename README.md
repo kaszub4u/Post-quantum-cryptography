@@ -1,5 +1,6 @@
 
-   			//PQC Lattice cryptography
+   			https://en.wikipedia.org/wiki/NTRUEncrypt
+      			//PQC Lattice cryptography
       
    			const p = 2n**256n - 189n;
 			const q = 2n**1279n - 1n;//2n**9941n - 1n;//;//2n**512n - 569n
