@@ -10,6 +10,7 @@
 			
 			const [f, h] = await ntru.genKeys();
 		
+			//text
 			const encrypted = await ntru.encryptNTRU(text, h);
 			
 			console.log(encrypted, encrypted.length);
@@ -18,6 +19,34 @@
 			
 			console.log(decrypted);
 			
+			//file
+			const file = new File([text], 'test.text', {
+				type : 'text/plain',
+			})
+			
+			const encryptedFile = await ntru.encrypt(file, 'PASSWORD');
+			
+			console.log(encryptedFile);
+			
+			const decryptedFile = await ntru.decrypt(encryptedFile, 'PASSWORD');
+			
+			console.log(decryptedFile)
+			
+			//complex data any type eg. arrays, arrays of files, maps, sets, objects, BigInt numbers etc.
+			const comlexData = {
+				text : text,
+				file : [file, file, file]
+			}
+			
+			const encryptedComplexData = await ntru.encrypt(comlexData, 'PASSWORD');
+			
+			console.log(encryptedComplexData);
+			
+			const decryptedComplexData = await ntru.decrypt(encryptedComplexData, 'PASSWORD');
+			
+			console.log(decryptedComplexData);
+			
+			//sign
 			const sign = await ntru.NTRUSign(encrypted, f)
 			
 			console.log(sign);
