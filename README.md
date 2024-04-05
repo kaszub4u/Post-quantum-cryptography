@@ -3,7 +3,7 @@
 			
 			const ntru = new NTRU(p, q);
 
-   		const text = 'test'.repeat(1000);
+   			const text = 'test'.repeat(1000);
 			
 			const [f, h] = await ntru.genKeys();
 		
