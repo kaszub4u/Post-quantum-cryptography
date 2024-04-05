@@ -363,7 +363,7 @@ function NTRU(p, q)
 	//NTRU
 	this.genHKey = async function(f)
 	{
-		const fh = await this.hashn(f.toString(), p);
+		const fh = await this.hashn(f.toString(16), p);
 		const fq = this.modInv(f, q);
 		return (fh * fq) % q;
 	}
@@ -387,7 +387,7 @@ function NTRU(p, q)
 		return ((((e * f) % q) % p) * this.modInv(f, p)) % p;
 	}
 	
-	this.NTRUSign = async function(msg, f, seed)
+	this.NTRUSign = async function(msg, f, seed = 0n)
 	{
 		seed ||= this.genRand(msb(p));
 		seed &= mask(msb(p));
@@ -400,9 +400,9 @@ function NTRU(p, q)
     
 		return  ((seed * this.modInv(seed, p)) * hrev * m) % q;
 	}
-	this.NTRUVerify = async function(msg, sign, h)
+	this.NTRUVerifySign = async function(msg, sign, h)
 	{
-		const m = this.hashn(msg, p);
+		const m = await this.hashn(msg, p);
 		const d = ((sign * h) % q % p);
 		return (m == d);
 	}
@@ -411,7 +411,7 @@ function NTRU(p, q)
 	{
 		const uint8 = new TextEncoder().encode(await serialize(data));
 		for(let i = 0n; i < BigInt(uint8.length); i++)
-			uint8[i] ^= Number((await this.hashn((seed + i).toString(), p)) & 255n);
+			uint8[i] ^= Number((await this.hashn((seed + i).toString(16), p)) & 255n);
 		return uint8array2base64(uint8);
 	}
 
@@ -419,7 +419,7 @@ function NTRU(p, q)
 	{
 		const uint8 = base642uint8array(base64);
 		for(let i = 0n; i < BigInt(uint8.length); i++)
-			uint8[i] ^= Number((await this.hashn((seed + i).toString(), p)) & 255n);
+			uint8[i] ^= Number((await this.hashn((seed + i).toString(16), p)) & 255n);
 		return await deserialize(new TextDecoder().decode(uint8));
 	}
 	
@@ -428,7 +428,7 @@ function NTRU(p, q)
 		seed ||= this.genRand(256n);
 		seed &= mask(msb(p));
 		
-		const ivn = await this.hashn(seed.toString(), p);
+		const ivn = await this.hashn(seed.toString(16), p);
 		
 		const e = await this.NTRUEncrypt(seed, h, ivn);
 	
@@ -441,7 +441,7 @@ function NTRU(p, q)
 	
 		let seed = await this.NTRUDecrypt(base642n(e), f);
 		seed &= mask(msb(p));
-		const ivn = await this.hashn(seed.toString(), p);
+		const ivn = await this.hashn(seed.toString(16), p);
 		
 		return await this.NTRUDecode(encoded, ivn);
 	}
@@ -460,3 +460,4 @@ function NTRU(p, q)
 		return await this.decryptNTRU(encrypted, f);
 	}
 }
+//NTRU END
