@@ -49,6 +49,9 @@
 			
 			console.log(decryptedComplexData);
 
+			const [f1, h1] = await ntru.genKeys();
+			const [f2, h2] = await ntru.genKeys();
+			const [f3, h3] = await ntru.genKeys();
 
 			//multi encrypt - limited to q bitlength
 			console.log('multi');
