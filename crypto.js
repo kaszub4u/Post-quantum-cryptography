@@ -316,7 +316,7 @@ function NTRU(p, q)
 			return x1;
 	}
 	
-	function powMod(base, exponent, modulus) 
+	this.powMod = function(base, exponent, modulus) 
 	{
 		if (modulus === 1n)
 			return 0n
@@ -337,9 +337,11 @@ function NTRU(p, q)
 	{
 		const uint8 = new TextEncoder().encode(await this.serialize(data));
 		
+		uint8.sort();
+		
 		let n = (mod - 1n)
 		for(let i = 0; i < uint8.length; i++)
-			n = (n * (BigInt(uint8[i]) + 1n) * (BigInt(i) + 1n)) % mod;
+			n = (n * (BigInt(uint8[i]) + 2n) * (BigInt(i) + 1n)) % mod;
 		
 		return n;
 	}
@@ -383,8 +385,9 @@ function NTRU(p, q)
 	}
 	this.NTRUDecrypt = async function(e, f)
 	{	
+		return (((e * f) % q) * this.modInv(f, p)) % p;
 		//return (e * f * this.modInv(f, p)) % q % p
-		return ((((e * f) % q) % p) * this.modInv(f, p)) % p;
+		//return ((((e * f) % q) % p) * this.modInv(f, p)) % p;
 	}
 	
 	this.NTRUSign = async function(msg, f, seed = 0n)
@@ -392,11 +395,12 @@ function NTRU(p, q)
 		seed ||= this.genRand(msb(p));
 		seed &= mask(msb(p));
 		
+		const h = await this.genHKey(f);
 		const m = await this.hashn(msg, p);
     
 		const fh = await this.hashn(f.toString(16), p);
 		const fhq = this.modInv(fh, q);
-		const hrev = (f * fhq) % q
+		const hrev = this.modInv(h, q)
     
 		return  ((seed * this.modInv(seed, p)) * hrev * m) % q;
 	}
