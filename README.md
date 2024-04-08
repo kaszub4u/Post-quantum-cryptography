@@ -66,8 +66,8 @@
 			console.log(sign);
 			console.log(await ntru.NTRUVerifySign(encrypted, sign, h));		
 
-	//sign
-	const sign = await ntru.NTRUSign(encrypted, f)
+			//sign
+			const sign = await ntru.NTRUSign(encrypted, f)
 			
-	console.log(sign);
-	console.log(await ntru.NTRUVerifySign(encrypted, sign, h));
+			console.log(sign);
+			console.log(await ntru.NTRUVerifySign(encrypted, sign, h));
