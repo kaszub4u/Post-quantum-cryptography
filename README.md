@@ -48,6 +48,16 @@ const decryptedComplexData = await ntru.decrypt(encryptedComplexData, 'PASSWORD'
 			
 console.log(decryptedComplexData);
 			
+//multi keys encrypt - limited to q bitlength
+console.log('multi');
+const encryptedMulti = await ntru.encryptNTRU(text, (h1 * h2 * h3));
+			
+console.log(encryptedMulti, encryptedMulti.length);
+			
+const decryptedMulti = await ntru.decryptNTRU(encryptedMulti, (f1 * f2 * f3));
+			
+console.log(decryptedMulti);			
+
 //sign
 const sign = await ntru.NTRUSign(encrypted, f)
 			
