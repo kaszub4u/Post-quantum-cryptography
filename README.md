@@ -9,6 +9,8 @@
 			
 			const ntru = new NTRU(p, q);
 
+   			const [f, h] = await ntru.genKeys();
+
 			const text = 'test'.repeat(1000);
 
 
