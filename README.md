@@ -54,21 +54,17 @@
 			const [f1, h1] = await ntru.genKeys();
 			const [f2, h2] = await ntru.genKeys();
 			const [f3, h3] = await ntru.genKeys();
-			const [f4, h4] = await ntru.genKeys();
-			const [f5, h5] = await ntru.genKeys();
-			const [f6, h6] = await ntru.genKeys();
-			const [f7, h7] = await ntru.genKeys();
-			const [f8, h8] = await ntru.genKeys();
+
 		
-			//multi encrypt
+			//multi encrypt - limited to size of q
 			console.log('multi');
-			const encryptedMulti = await ntru.encryptNTRU(text, (h1 * h2 * h3 * h4 * h5 * h6 * h7 * h8));
+			const encryptedMulti = await ntru.encryptNTRU(text, (h1 * h2 * h3));
 		
 			console.log(encryptedMulti, encryptedMulti.length);
 		
-			const decryptedMulti = await ntru.decryptNTRU(encryptedMulti, (f1 * f2 * f3 * f4 * f5 * f6 * f7 * f8));
+			const decryptedMulti = await ntru.decryptNTRU(encryptedMulti, (f1 * f2 * f3));
 		
-			console.log(decryptedMulti);					
+			console.log(decryptedMulti);						
 
 			//sign
 			const sign = await ntru.NTRUSign(encrypted, f)
