@@ -369,8 +369,8 @@ function NTRU(p, q)
 		f &= mask(msb(p));		
 		
 		const fh = await this.hashn(f.toString(16), p);
-		const fp = this.modInv((f % p), p);
-		return (fh * fp) % p;
+		const fq = this.modInv((f % p), q);
+		return (fh * fq) % q;
 	}
 	this.genKeys = async function(f)
 	{
@@ -384,11 +384,11 @@ function NTRU(p, q)
 		seed ||= this.genRand(msb(p));
 		seed &= mask(msb(p));
 		
-		return (seed * q * (h % p) + this.modInv(m, q)) % q;
+		return (seed * p * (h % q) + m) % q;
 	}
 	this.NTRUDecrypt = async function(e, f)
 	{	
-		return this.modInv(((((e * f) % q) * this.modInv(f, q)) % q), q)
+		return (((e * f) % q) * this.modInv(f, p)) % p
 	}
 	
 	this.NTRUSign = async function(msg, f, seed = 0n)
